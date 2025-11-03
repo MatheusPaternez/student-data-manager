@@ -118,3 +118,22 @@ const calculateAverage = () => {
 }
 
 loadSavedData();
+
+async function loadUsers() {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/users');
+        const users = await response.json();
+        
+        const usersSection = document.createElement('section');
+        usersSection.innerHTML = `
+            <h2>Total Users: ${users.length}</h2>
+            ${users.map(user => `<h3 style="font-weight: 300">${user.username}</h3>`).join('')}
+        `;
+        
+        main.appendChild(usersSection);
+    } catch (error) {
+        console.log('Error loading users', error);
+    }
+}
+
+loadUsers();
