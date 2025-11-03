@@ -3,6 +3,7 @@ const gradeInput = document.getElementById("grade-input");
 const buttonInput = document.getElementById("submit-button");
 const saveButton = document.getElementById("save-button");
 const clearButton = document.getElementById("clear-button");
+const average = document.getElementById("average-grade");
 const main = document.querySelector("main");
 
 const DATA_KEY = "dataNameGrade";
@@ -38,6 +39,7 @@ const loadSavedData = () => {
         dataList = [];
         // If not exist, then return an empty array
     }
+    calculateAverage();
     showData();
 }
 
@@ -56,6 +58,7 @@ buttonInput.addEventListener("click", function (e) {
         dataList.push(newData);
         // Push those data to the datalist
 
+        calculateAverage();
         showData();
         // Show data in screen
         nameInput.value = "";
@@ -80,8 +83,27 @@ clearButton.addEventListener("click", function (e) {
     // Remove every data from local storage
     dataList = [];
     // Remove every data from datalist
+    calculateAverage();
     showData();
     // Then, after all storage variables became empty, call the function for showing data
 });
+
+// Average Function
+const calculateAverage = () => {
+    // Calculate if data exist only
+    if (dataList.length === 0) {
+        average.innerHTML = "Average: 0.00";
+        return;
+    }
+
+    // Sum the grades
+    const total = dataList.reduce((sum, item) => sum + Number(item.grade), 0);
+
+    // Calculate the average
+    const avg = total / dataList.length;
+
+    // Show the average in the h1 HTML element, with 2 decimal numbers
+    average.innerHTML = `Average: ${avg.toFixed(2)}`;
+}
 
 loadSavedData();
