@@ -8,6 +8,7 @@ const main = document.querySelector("main");
 
 const DATA_KEY = "dataNameGrade";
 let dataList = [];
+let namesSet = new Set();
 
 
 const showData = () => {
@@ -35,8 +36,11 @@ const loadSavedData = () => {
     if (SavedString) {
         dataList = JSON.parse(SavedString);
         // If exists, then convert into an object
+        namesSet = new Set(dataList.map(item => item.name));
+        // Populate set with existing names
     } else {
         dataList = [];
+        namesSet.clear();
         // If not exist, then return an empty array
     }
     calculateAverage();
@@ -50,13 +54,19 @@ buttonInput.addEventListener("click", function (e) {
     // When Submit Data button clicked, grab the user information writted in the input
 
     if (name && grade) {
+        // Check if exist
+        if (namesSet.has(name)) {
+            alert("This name already exists!");
+            return;
+        }
+
         const newData = {
             name: name,
             grade: grade
         }; // If both data exist, then store into an object
 
         dataList.push(newData);
-        // Push those data to the datalist
+        namesSet.add(name);
 
         calculateAverage();
         showData();
@@ -82,6 +92,7 @@ clearButton.addEventListener("click", function (e) {
     localStorage.removeItem(DATA_KEY);
     // Remove every data from local storage
     dataList = [];
+    namesSet.clear();
     // Remove every data from datalist
     calculateAverage();
     showData();
